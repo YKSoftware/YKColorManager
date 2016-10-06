@@ -1,0 +1,165 @@
+﻿<YK:Window x:Class="YKColorManager.Views.MainView"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:YK="clr-namespace:YKToolkit.Controls;assembly=YKToolkit.Controls"
+           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+           xmlns:vm="clr-namespace:YKColorManager.ViewModels"
+           xmlns:b="clr-namespace:YKColorManager.Views.Behaviors"
+           xmlns:c="clr-namespace:YKColorManager.Views.Converters"
+           mc:Ignorable="d"
+           d:DataContext="{d:DesignInstance {x:Type vm:MainViewModel}}"
+           Icon="/YKColorManager;component/Views/Resources/Fire_Flower.ico"
+           Title="{Binding Title}"
+           Width="490" Height="380"
+           MinWidth="490"
+           MaxWidth="490"
+           WindowStartupLocation="CenterScreen"
+           IsClosingConfirmationEnabled="False">
+    <Window.Resources>
+        <DrawingBrush x:Key="AlphaBackgroundBrush" ViewportUnits="Absolute" Viewport="0,0,10,10" TileMode="Tile">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="White">
+                        <GeometryDrawing.Geometry>
+                            <RectangleGeometry Rect="0,0,100,100" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="LightGray">
+                        <GeometryDrawing.Geometry>
+                            <GeometryGroup>
+                                <RectangleGeometry Rect="0,0,50,50" />
+                                <RectangleGeometry Rect="50,50,50,50" />
+                            </GeometryGroup>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="b:TextBoxBehavior.IsAllSelectWhenFocused" Value="True" />
+        </Style>
+    </Window.Resources>
+
+    <DockPanel>
+        <Grid DockPanel.Dock="Top">
+            <Button Content="Add Item" Command="{Binding AddCommand}" HorizontalAlignment="Left" Margin="6" />
+            <Button Content="+" Command="{Binding NewProcessCommand}" HorizontalAlignment="Right" Margin="6" />
+        </Grid>
+
+        <ItemsControl ItemsSource="{Binding ColorList}" Focusable="False">
+            <ItemsControl.Template>
+                <ControlTemplate>
+                    <ScrollViewer VerticalScrollBarVisibility="Visible">
+                        <StackPanel Margin="6,0,10,0">
+                            <ItemsPresenter />
+                        </StackPanel>
+                    </ScrollViewer>
+                </ControlTemplate>
+            </ItemsControl.Template>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="0,4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
+
+                            <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10">
+                                <Button DockPanel.Dock="Left" b:ColorUnderCursorBehavior.IsEnabled="True" b:ColorUnderCursorBehavior.SelectedColor="{Binding CurrentColor}">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                            <Setter Property="HorizontalAlignment" Value="Left" />
+                                            <Setter Property="Padding" Value="4,2" />
+                                            <Setter Property="Margin" Value="4,0,0,0" />
+                                            <Setter Property="Content" Value="Click to start capture color" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseCaptured" Value="True">
+                                                    <Setter Property="Content" Value="Release to end capture color" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button Content="6" FontFamily="Marlett" Command="{Binding DataContext.DownCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding .}" HorizontalAlignment="Center" Margin="0,0,4,0" />
+                                    <Button Content="5" FontFamily="Marlett" Command="{Binding DataContext.UpCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding .}" HorizontalAlignment="Center" />
+                                    <Button Content="r" FontFamily="Marlett" HorizontalAlignment="Center" Command="{Binding DataContext.RemoveCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding .}" Margin="20,0,0,0" />
+                                </StackPanel>
+                            </DockPanel>
+
+                            <Border Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Background="{StaticResource AlphaBackgroundBrush}" Width="36" Height="36" Margin="6">
+                                <Rectangle Width="36" Height="36" Stroke="Black">
+                                    <Rectangle.Fill>
+                                        <SolidColorBrush Color="{Binding CurrentColor}" />
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                            </Border>
+
+                            <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="Color : " TextAlignment="Right" VerticalAlignment="Center" />
+                            <ComboBox Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="5"
+                                    Margin="0,4"
+                                    ItemsSource="{Binding ColorList}"
+                                    SelectedValue="{Binding CurrentComparableColor}"
+                                    SelectedValuePath="Value">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Rectangle Width="12" Height="16" Stroke="Black">
+                                                <Rectangle.Fill>
+                                                    <SolidColorBrush Color="{Binding Value}" />
+                                                </Rectangle.Fill>
+                                            </Rectangle>
+                                            <TextBlock Text="{Binding Key}" Margin="4,0,0,0" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+
+                            <TextBox Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="2" Text="{Binding ColorCode, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" VerticalContentAlignment="Center" Margin="4,4,0,4" />
+
+                            <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="A : " TextAlignment="Right" VerticalAlignment="Center" />
+                            <YK:SpinInput Grid.Row="2" Grid.Column="3" Value="{Binding A, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="255" StringFormat="#0" Margin="0,2" />
+
+                            <TextBlock Grid.Row="2" Grid.Column="4" Text="R : " TextAlignment="Right" VerticalAlignment="Center" />
+                            <YK:SpinInput Grid.Row="2" Grid.Column="5" Value="{Binding R, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="255" StringFormat="#0" Margin="0,2" />
+
+                            <TextBlock Grid.Row="2" Grid.Column="6" Text="G : " TextAlignment="Right" VerticalAlignment="Center" />
+                            <YK:SpinInput Grid.Row="2" Grid.Column="7" Value="{Binding G, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="255" StringFormat="#0" Margin="0,2" />
+
+                            <TextBlock Grid.Row="2" Grid.Column="8" Text="B : " TextAlignment="Right" VerticalAlignment="Center" />
+                            <YK:SpinInput Grid.Row="2" Grid.Column="9" Value="{Binding B, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="255" StringFormat="#0" Margin="0,2" />
+
+                            <Separator Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="10" Margin="0,4,0,0">
+                                <Separator.Style>
+                                <Style TargetType="Separator">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ItemsSource.Count, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" Value="1">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Separator.Style>
+                        </Separator>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </DockPanel>
+</YK:Window>
