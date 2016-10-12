@@ -2,6 +2,7 @@
 {
     using System.Collections.ObjectModel;
     using YKColorManager.Models;
+    using YKToolkit.Controls;
 
     public class MainViewModel : NotificationObject
     {
@@ -99,6 +100,22 @@
                     var item = p as ColorInfo;
                     var index = this.ColorList.IndexOf(item) + 1;
                     return index < this.ColorList.Count;
+                }));
+            }
+        }
+
+        private DelegateCommand _changeThemeCommand;
+        public DelegateCommand ChangeThemeCommand
+        {
+            get
+            {
+                return this._changeThemeCommand ?? (this._changeThemeCommand = new DelegateCommand(
+                _ =>
+                {
+                    var manager = ThemeManager.Instance;
+                    var index = manager.ThemeNameList.IndexOf(manager.CurrentTheme);
+                    index = index + 1 < manager.ThemeNameList.Count ? index + 1 : 0;
+                    manager.SetTheme(manager.ThemeNameList[index]);
                 }));
             }
         }

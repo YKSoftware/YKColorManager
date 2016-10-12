@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("YKSoftware")]
 [assembly: AssemblyProduct("YKColorManager")]
-[assembly: AssemblyCopyright("Copyright © YKSoftware 2016")]
+[assembly: AssemblyCopyright("Copyright © 2016 YKSoftware")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,5 +51,5 @@ using System.Windows;
 // すべての値を指定するか、下のように '*' を使ってビルドおよびリビジョン番号を 
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyVersion("2.0.0.1")]
 //[assembly: AssemblyFileVersion("1.0.0.0")]

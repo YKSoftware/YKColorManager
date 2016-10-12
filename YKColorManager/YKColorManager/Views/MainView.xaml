@@ -40,6 +40,9 @@
             <Setter Property="b:TextBoxBehavior.IsAllSelectWhenFocused" Value="True" />
         </Style>
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="F11" Command="{Binding ChangeThemeCommand}" />
+    </Window.InputBindings>
 
     <DockPanel>
         <Grid DockPanel.Dock="Top">
@@ -47,19 +50,27 @@
             <Button Content="+" Command="{Binding NewProcessCommand}" HorizontalAlignment="Right" Margin="6" />
         </Grid>
 
-        <ItemsControl ItemsSource="{Binding ColorList}" Focusable="False">
-            <ItemsControl.Template>
-                <ControlTemplate>
-                    <ScrollViewer VerticalScrollBarVisibility="Visible">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding ColorList}" Focusable="False">
+                <ItemsControl.Template>
+                    <ControlTemplate>
                         <StackPanel Margin="6,0,10,0">
                             <ItemsPresenter />
                         </StackPanel>
-                    </ScrollViewer>
-                </ControlTemplate>
-            </ItemsControl.Template>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="0,4">
+                    </ControlTemplate>
+                </ItemsControl.Template>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,4">
+                            <Grid.Style>
+                                <Style TargetType="{x:Type Grid}">
+                                    <Setter Property="TextBlock.Foreground">
+                                        <Setter.Value>
+                                            <SolidColorBrush Color="{DynamicResource ForegroundColor}" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Grid.Style>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -158,8 +169,9 @@
                             </Separator.Style>
                         </Separator>
                     </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </DockPanel>
 </YK:Window>
